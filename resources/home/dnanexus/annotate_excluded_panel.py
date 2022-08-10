@@ -30,20 +30,19 @@ def parse_args():
     return args
 
 
-
 def main():
 
     args = parse_args()
 
     # read data in
     exc_panel = pd.read_csv(args.excluded_panel, sep="\t", header=None)
-    panel  = pd.read_csv(args.panel, sep="\t", header=None)
+    panel = pd.read_csv(args.panel, sep="\t", header=None)
 
     # Check both files have expected columns and read in data
     exc_panel_col_names = ["chr_exluded", "pos_start_excluded",
-                            "pos_end_excluded", "strand", "dot",
-                            "chr_GCF", "pos_start_GCF", "pos_end_GCF",
-                            "HGNC_ID", "transcript", "exon"]
+                        "pos_end_excluded", "strand", "dot",
+                        "chr_GCF", "pos_start_GCF", "pos_end_GCF",
+                        "HGNC_ID", "transcript", "exon"]
     if len(exc_panel.columns) != len(exc_panel_col_names):
         raise Exception("excluded_panel file '{}' does not "
                         "contain expected columns".format(
@@ -62,7 +61,9 @@ def main():
 
     # keep rows that have panel transcript in the exc_panel as exc_panel
     # has many transcript to gene
-    exc_panel_transcript = exc_panel.loc[exc_panel["transcript"].isin(panel_transcripts) ]
+    exc_panel_transcript = exc_panel.loc[
+                        exc_panel["transcript"].isin(panel_transcripts)
+                        ]
 
     # select excluded columns, HGNCID, transcript, exon
     exc_panel_transcript_subset = exc_panel_transcript[[
