@@ -40,10 +40,15 @@ def main():
     panel  = pd.read_csv(args.panel, sep="\t", header=None)
 
     # Check both files have expected columns and read in data
-    exc_panel_col_names = ["chr_exluded", "pos_start_excluded", "pos_end_excluded", "strand", "dot", "chr_GCF", "pos_start_GCF", "pos_end_GCF", "HGNC_ID", "transcript", "exon"]
+    exc_panel_col_names = ["chr_exluded", "pos_start_excluded",
+                            "pos_end_excluded", "strand", "dot",
+                            "chr_GCF", "pos_start_GCF", "pos_end_GCF",
+                            "HGNC_ID", "transcript", "exon"]
     if len(exc_panel.columns) != len(exc_panel_col_names):
         raise Exception("excluded_panel file '{}' does not "
-        "contain expected columns".format(args.excluded_panel))
+                        "contain expected columns".format(
+                            args.excluded_panel
+                            ))
     exc_panel.columns = exc_panel_col_names
 
     panel_col_names = ["chr", "pos_start", "pos_end", "transcript"]
@@ -60,9 +65,13 @@ def main():
     exc_panel_transcript = exc_panel.loc[exc_panel["transcript"].isin(panel_transcripts) ]
 
     # select excluded columns, HGNCID, transcript, exon
-    exc_panel_transcript_subset = exc_panel_transcript[["chr_exluded", "pos_start_excluded","pos_end_excluded",  "HGNC_ID", "transcript", "exon"]]
+    exc_panel_transcript_subset = exc_panel_transcript[[
+                                    "chr_exluded", "pos_start_excluded",
+                                    "pos_end_excluded", "HGNC_ID",
+                                    "transcript", "exon"]]
     # rename columns
-    exc_panel_transcript_subset.columns = ["Chr", "Pos_start","Pos_end",  "HGNC_ID", "Transcript", "Exon"]
+    exc_panel_transcript_subset.columns = ["Chr", "Pos_start", "Pos_end",
+                                        "HGNC_ID", "Transcript", "Exon"]
 
     exc_panel_transcript_subset.to_csv(
             'annotated_excluded_panel_region.bed',
