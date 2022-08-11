@@ -25,6 +25,12 @@ def parse_args():
         required=True
         )
 
+    parser.add_argument(
+        '-r', '--excluded_region',
+        help='Excluded region file',
+        required=True
+        )
+
     args = parser.parse_args()
 
     return args
@@ -75,8 +81,20 @@ def main():
     exc_panel_transcript_subset.columns = ["Chrom", "Start", "End",
                                         "HGNC_ID", "Transcript", "Exon"]
 
+    # name output file excluded_file + panel
+    panel_name = args.panel
+    panel_name = panel_name.split("/")[-1]
+    panel_name = panel_name.split(".bed")[0]
+
+    excluded_name = args.excluded_region
+    excluded_name = excluded_name.split("/")[-1]
+    excluded_name = excluded_name.split(".bed")[0]
+
+    output_filename = excluded_name + "_" + panel_name + ".bed"
+    print(output_filename)
+
     exc_panel_transcript_subset.to_csv(
-            'annotated_excluded_panel_region.bed',
+            output_filename,
             sep="\t", index=False, header=True
             )
 

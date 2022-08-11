@@ -16,11 +16,13 @@ main() {
 
     bedtools intersect -b $exons_file_path -a panel_exluded.bed -wa -wb > panel_excluded_genes.bed
 
-    python3 annotate_excluded_panel.py -e panel_excluded_genes.bed -p $panel_bed_path
+    python3 annotate_excluded_panel.py -e panel_excluded_genes.bed -p $panel_bed_path -r $excluded_regions_path
 
     echo "--------------Outputting files -----------------"
     mkdir -p /home/dnanexus/out/annotated_excluded_file/
-    mv annotated_excluded_panel_region.bed /home/dnanexus/out/annotated_excluded_file/
+
+    out_file=$(find . -maxdepth 1 -name "00*.bed")
+    mv $out_file /home/dnanexus/out/annotated_excluded_file/
 
     dx-upload-all-outputs
 }
