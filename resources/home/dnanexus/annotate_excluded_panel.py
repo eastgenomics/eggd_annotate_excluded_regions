@@ -5,10 +5,10 @@ import argparse
 
 
 def parse_args():
-    """Parse through arguements
+    """Parse through arguments
     Returns:
         args: Variable that you can extract relevant
-        arguements inputs needed
+        arguments inputs needed
     """
     # Read in arguments
     parser = argparse.ArgumentParser()
@@ -72,7 +72,7 @@ def main():
                                     "pos_end_excluded", "HGNC_ID",
                                     "transcript", "exon"]]
     # rename columns
-    exc_panel_transcript_subset.columns = ["Chr", "Pos_start", "Pos_end",
+    exc_panel_transcript_subset.columns = ["Chrom", "Start", "End",
                                         "HGNC_ID", "Transcript", "Exon"]
 
     exc_panel_transcript_subset.to_csv(
