@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -exo pipefail
+
 main() {
 
     # Download inputs from DNAnexus in parallel, these will be downloaded to /home/dnanexus/in/
