@@ -3,14 +3,16 @@
   "title": "eggd_annotate_excluded_regions",
   "summary": "Annotates and filters excluded bed file for CNV reports",
   "dxapi": "1.0.0",
-  "version": "0.0.1",
+  "properties": {
+    "githubRelease": "1.0.0"
+    },
   "inputSpec": [
     {
       "name": "excluded_regions",
       "class": "file",
       "optional": false,
       "patterns": [
-        "*"
+        "*excluded_intervals.bed"
       ],
       "help": ""
     },
@@ -19,7 +21,7 @@
       "class": "file",
       "optional": false,
       "patterns": [
-        "*"
+        "*.bed"
       ],
       "help": ""
     },
@@ -28,7 +30,7 @@
       "class": "file",
       "optional": false,
       "patterns": [
-        "*"
+        "*.tsv"
       ],
       "help": ""
     }
