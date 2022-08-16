@@ -12,11 +12,21 @@ main() {
 
     echo "--------------Filtering and annotating excluded files -----------------"
 
-    bedtools intersect -a $excluded_regions_path -b $panel_bed_path > panel_exluded.bed
+    bedtools intersect -a $excluded_regions_path -b $panel_bed_path | sort | uniq > panel_exluded.bed
+    head panel_exluded.bed
+    # some panels may not be excluded so the panel_excluded.bed so have
+    # an empty file outputted here. How to deal with the naming system?
 
-    bedtools intersect -b $exons_file_path -a panel_exluded.bed -wa -wb > panel_excluded_genes.bed
+    if [ -s panel_exluded.bed ]; then
+        echo "Some panels are in excluded regions, annotation will be attempted."
+        bedtools intersect -b $exons_hgnc_path -a panel_exluded.bed -wao > panel_excluded_genes.bed
+        head panel_excluded_genes.bed
+        python3 annotate_excluded_panel.py -e panel_excluded_genes.bed -p $panel_bed_path -r $excluded_regions_path -g $exons_gene_path
+    else
+		echo "Panel is not in excluded region"
+        printf "Chrom\tStart\tEnd\tHGNC_ID\tTranscript\tExon\n" | tee touch $(echo ${excluded_regions_path##*/} | sed 's/.bed//g')_${panel_bed_path##*/}
+	fi
 
-    python3 annotate_excluded_panel.py -e panel_excluded_genes.bed -p $panel_bed_path -r $excluded_regions_path
 
     echo "--------------Outputting files -----------------"
     mkdir -p /home/dnanexus/out/annotated_excluded_file/
