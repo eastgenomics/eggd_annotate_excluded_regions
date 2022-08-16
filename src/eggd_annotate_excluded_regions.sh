@@ -12,14 +12,14 @@ main() {
 
     echo "--------------Filtering and annotating excluded files -----------------"
 
-    bedtools intersect -a $excluded_regions_path -b $panel_bed_path | sort | uniq > panel_exluded.bed
-    head panel_exluded.bed
+    bedtools intersect -a $excluded_regions_path -b $panel_bed_path | sort | uniq > panel_excluded.bed
+    head panel_excluded.bed
     # some panels may not be excluded so the panel_excluded.bed so have
     # an empty file outputted here. How to deal with the naming system?
 
-    if [ -s panel_exluded.bed ]; then
+    if [ -s panel_excluded.bed ]; then
         echo "Some panels are in excluded regions, annotation will be attempted."
-        bedtools intersect -b $exons_hgnc_path -a panel_exluded.bed -wao > panel_excluded_genes.bed
+        bedtools intersect -b $exons_hgnc_path -a panel_excluded.bed -wao > panel_excluded_genes.bed
         head panel_excluded_genes.bed
         python3 annotate_excluded_panel.py -e panel_excluded_genes.bed -p $panel_bed_path -r $excluded_regions_path -g $exons_gene_path
     else
