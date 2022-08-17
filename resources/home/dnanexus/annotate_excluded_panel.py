@@ -119,12 +119,10 @@ def main():
 
     # name output file excluded_file + panel
     panel_name = args.panel
-    panel_name = panel_name.split("/")[-1]
-    panel_name = panel_name.split(".bed")[0]
+    panel_name = panel_name.split("/")[-1].rstrip(".bed")
 
     excluded_name = args.excluded_region
-    excluded_name = excluded_name.split("/")[-1]
-    excluded_name = excluded_name.split(".bed")[0]
+    excluded_name = excluded_name.split("/")[-1].rstrip(".bed")
 
     output_filename = excluded_name + "_" + panel_name + ".bed"
     print(output_filename)
