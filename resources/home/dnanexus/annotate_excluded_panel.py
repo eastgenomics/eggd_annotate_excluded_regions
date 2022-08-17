@@ -100,10 +100,8 @@ def main():
     # rename columns
     exc_panel_transcript_subset.columns = ["Chrom", "Start", "End",
                                         "HGNC_ID", "Transcript", "Exon"]
-    # Calculate length of CNV
+    # Calculate length of annotated excluded region
     exc_panel_transcript_subset['Length'] = exc_panel_transcript_subset['End'] - exc_panel_transcript_subset['Start']
-    print("exc_panel_transcript_subset")
-    print(exc_panel_transcript_subset)
 
     # lets add the gene symbol now
     # take the gene & transcript info
@@ -118,8 +116,6 @@ def main():
     # reorder columns
     df2 = df2[["Chrom", "Start", "End", "Length",
                 "Gene_Symbol", "HGNC_ID","Transcript", "Exon"]]
-    print("df2")
-    print(df2)
 
     # name output file excluded_file + panel
     panel_name = args.panel
