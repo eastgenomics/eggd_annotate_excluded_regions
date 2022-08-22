@@ -15,7 +15,7 @@ main() {
     bedtools intersect -a $excluded_regions_path -b $panel_bed_path | sort | uniq > panel_excluded.bed
     head panel_excluded.bed
     # some panels may not be excluded so the panel_excluded.bed so have
-    # an empty file outputted here. How to deal with the naming system?
+    # an empty file outputted here.
 
     if [ -s panel_excluded.bed ]; then
         echo "Some panels are in excluded regions, annotation will be attempted."
