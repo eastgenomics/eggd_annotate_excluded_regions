@@ -28,7 +28,7 @@ def parse_args():
 
     parser.add_argument(
         '-r', '--excluded_region',
-        help='Excluded region file',
+        help='Excluded regions file intersected with requested panel regions',
         required=True
         )
 
