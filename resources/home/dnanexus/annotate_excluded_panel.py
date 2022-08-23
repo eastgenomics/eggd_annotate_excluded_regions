@@ -23,7 +23,7 @@ def parse_args():
     parser.add_argument(
         '-p', '--panel',
         help='Panel bed file',
-        required=True
+        required=False
         )
 
     parser.add_argument(
@@ -83,6 +83,7 @@ def read_data(args):
 
     if args.panel is None:
         print('No panel bed inputted into python script.')
+        panel  = ""
     else:
         panel = pd.read_csv(args.panel, sep="\t", header=None)
         # Check input files have expected columns and read in data
@@ -103,17 +104,21 @@ def main():
 
     exc_panel, panel, cds_gene = read_data(args)
 
-    # get the transcripts in panel
-    panel_transcripts = list(panel['transcript'].unique())
-    # Add the dot for cases where its not exonic so they have a
-    # dot instead of a transcript.
-    panel_transcripts.append(".")
+    if args.panel is not None:
+        # get the transcripts in panel
+        panel_transcripts = list(panel['transcript'].unique())
+        # Add the dot for cases where its not exonic so they have a
+        # dot instead of a transcript.
+        panel_transcripts.append(".")
 
-    # keep rows that have panel transcript in the exc_panel as exc_panel
-    # has many transcript to gene
-    exc_panel_transcript = exc_panel.loc[
-                        exc_panel["transcript"].isin(panel_transcripts)
-                        ]
+        # keep rows that have panel transcript in the exc_panel as exc_panel
+        # has many transcript to gene
+        exc_panel_transcript = exc_panel.loc[
+                            exc_panel["transcript"].isin(panel_transcripts)
+                            ]
+    else:
+        exc_panel_transcript = exc_panel
+
 
     # select excluded columns, HGNCID, transcript, exon
     exc_panel_transcript_subset = exc_panel_transcript[[

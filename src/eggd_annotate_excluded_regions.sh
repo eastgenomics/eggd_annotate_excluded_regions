@@ -28,7 +28,7 @@ main() {
             echo "Some panel regions over lap with the gCNV excluded regions, these will be annotated."
             bedtools intersect -b $cds_hgnc_path -a panel_excluded.bed -wao > panel_excluded_genes.bed
             head panel_excluded_genes.bed
-            python3 annotate_excluded_panel.py -e panel_excluded_genes.bed -p $panel_bed_path -r $excluded_regions_path -g $cds_gene_path
+            python3 annotate_excluded_panel.py -e panel_excluded_genes.bed -p $panel_bed_path -r $excluded_regions_path -c $cds_gene_path
         else
             echo "Panel regions do not overlap with cnv calling excluded regions."
             printf "Chrom\tStart\tEnd\tHGNC_ID\tTranscript\tExon\n" | tee touch $(echo ${excluded_regions_path##*/} | sed 's/.bed//g')_${panel_bed_path##*/}
