@@ -31,7 +31,7 @@ main() {
             python3 annotate_excluded_panel.py -e panel_excluded_genes.bed -p $panel_bed_path -r $excluded_regions_path -c $cds_gene_path
         else
             echo "Panel regions do not overlap with cnv calling excluded regions."
-            printf "Chrom\tStart\tEnd\tHGNC_ID\tTranscript\tExon\n" | tee touch $(echo ${excluded_regions_path##*/} | sed 's/.bed//g')_${panel_bed_path##*/}
+            printf "Chrom\tStart\tEnd\tLength\tGene_Symbol\tHGNC_ID\tTranscript\tExon\n" | tee touch $(echo ${excluded_regions_path##*/} | sed 's/.bed//g')_${panel_bed_path##*/}
         fi
     fi
 
