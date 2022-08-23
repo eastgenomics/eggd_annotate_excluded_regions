@@ -33,8 +33,8 @@ def parse_args():
         )
 
     parser.add_argument(
-        '-g', '--exons',
-        help='GCF exons file by gene symbols',
+        '-c', '--cds',
+        help='cds file by gene symbols',
         required=True
         )
 
@@ -43,14 +43,23 @@ def parse_args():
     return args
 
 
-def main():
+def read_data(args):
+    """Reads in data from the arguement inputs. Also checks whether panel
+    bed file is provided.
 
-    args = parse_args()
+    Args:
+        args (object): parse_args object containing all arg input info
+
+    Returns:
+        exc_panel (pd datatframe): gCNV exluded file (either interesected
+                                    eith panel or not)
+        panel (pd dataframe OR null): panel file
+        cds_gene (pd dataframe): cds file containing gene symbols
+    """
 
     # read data in
     exc_panel = pd.read_csv(args.excluded_panel, sep="\t", header=None)
-    panel = pd.read_csv(args.panel, sep="\t", header=None)
-    exons_gene = pd.read_csv(args.exons, sep="\t", header=None)
+    cds_gene = pd.read_csv(args.cds, sep="\t", header=None)
 
     # Check input files have expected columns and read in data
     exc_panel_col_names = ["chr_exluded", "pos_start_excluded",
@@ -64,21 +73,35 @@ def main():
                             ))
     exc_panel.columns = exc_panel_col_names
 
-    panel_col_names = ["chr", "pos_start", "pos_end", "transcript"]
-    if len(panel.columns) != len(panel_col_names):
-        raise Exception(
-            "Panel file '{}' does not contain "
-            "expected columns".format(args.panel))
-    panel.columns = panel_col_names
-
-    # Check both files have expected columns and read in data
-    exons_gene_col_names = ["Chr", "Start",
+    cds_gene_col_names = ["Chr", "Start",
                         "End", "Gene_Symbol", "Transcript",
                         "Exon"]
-    if len(exons_gene.columns) != len(exons_gene_col_names):
-        raise Exception("exons_gene file does not "
+    if len(cds_gene.columns) != len(cds_gene_col_names):
+        raise Exception("cds_gene file does not "
                         "contain expected columns")
-    exons_gene.columns = exons_gene_col_names
+    cds_gene.columns = cds_gene_col_names
+
+    if args.panel is None:
+        print('No panel bed inputted into python script.')
+    else:
+        panel = pd.read_csv(args.panel, sep="\t", header=None)
+        # Check input files have expected columns and read in data
+        panel_col_names = ["chr", "pos_start", "pos_end", "transcript"]
+        if len(panel.columns) != len(panel_col_names):
+            raise Exception(
+                "Panel file '{}' does not contain "
+                "expected columns".format(args.panel))
+        panel.columns = panel_col_names
+
+
+    return exc_panel, panel, cds_gene
+
+
+def main():
+
+    args = parse_args()
+
+    exc_panel, panel, cds_gene = read_data(args)
 
     # get the transcripts in panel
     panel_transcripts = list(panel['transcript'].unique())
@@ -105,11 +128,11 @@ def main():
 
     # lets add the gene symbol now
     # take the gene & transcript info
-    exons_gene_subset = exons_gene[["Gene_Symbol", "Transcript"]]
-    exons_gene_subset = exons_gene_subset.drop_duplicates()
+    cds_gene_subset = cds_gene[["Gene_Symbol", "Transcript"]]
+    cds_gene_subset = cds_gene_subset.drop_duplicates()
 
     # left join on transcript to get the gene symbol
-    df = exc_panel_transcript_subset.merge(exons_gene_subset,
+    df = exc_panel_transcript_subset.merge(cds_gene_subset,
                                             on='Transcript', how='left')
     df2 = df.replace(np.nan, '.', regex=True)
 
@@ -118,13 +141,16 @@ def main():
                 "Gene_Symbol", "HGNC_ID","Transcript", "Exon"]]
 
     # name output file excluded_file + panel
-    panel_name = args.panel
-    panel_name = panel_name.split("/")[-1].rstrip(".bed")
-
     excluded_name = args.excluded_region
     excluded_name = excluded_name.split("/")[-1].rstrip(".bed")
 
-    output_filename = excluded_name + "_" + panel_name + ".bed"
+    if args.panel is not None:
+        panel_name = args.panel
+        panel_name = panel_name.split("/")[-1].rstrip(".bed")
+        output_filename = excluded_name + "_" + panel_name + ".bed"
+    else:
+        output_filename = excluded_name + "_" + "annotated" + ".bed"
+
     print(output_filename)
 
     df2.to_csv(
