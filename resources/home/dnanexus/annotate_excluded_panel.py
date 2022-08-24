@@ -72,6 +72,8 @@ def read_data(args):
                             args.excluded_panel
                             ))
     exc_panel.columns = exc_panel_col_names
+    # remove versioning in transcript
+    exc_panel['transcript']= exc_panel['transcript'].str.replace(r'\..*', '')
 
     cds_gene_col_names = ["Chr", "Start",
                         "End", "Gene_Symbol", "Transcript",
@@ -93,6 +95,8 @@ def read_data(args):
                 "Panel file '{}' does not contain "
                 "expected columns".format(args.panel))
         panel.columns = panel_col_names
+        # remove versioning in transcript
+        panel['transcript']= panel['transcript'].str.replace(r'\..*', '')
 
 
     return exc_panel, panel, cds_gene
@@ -155,8 +159,6 @@ def main():
         output_filename = excluded_name + "_" + panel_name + ".bed"
     else:
         output_filename = excluded_name + "_" + "annotated" + ".bed"
-
-    print(output_filename)
 
     df2.to_csv(
             output_filename,
