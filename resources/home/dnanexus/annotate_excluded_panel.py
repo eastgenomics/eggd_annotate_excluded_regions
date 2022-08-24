@@ -74,6 +74,9 @@ def read_data(args):
     exc_panel.columns = exc_panel_col_names
     # remove versioning in transcript
     exc_panel['transcript2'] = exc_panel['transcript'].str.replace(r'\..*', '')
+    # some excluded regions are intron so its just a dot and removing this 
+    # can cause matching issues
+    exc_panel.loc[exc_panel['transcript2'].fillna('').eq(''), 'transcript2'] = '.'
 
     cds_gene_col_names = ["Chr", "Start",
                         "End", "Gene_Symbol", "Transcript",
