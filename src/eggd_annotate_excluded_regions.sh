@@ -14,13 +14,15 @@ main() {
     # sometimes a panel bed file is not provided
     if [ -z "$panel_bed" ]; then
         echo "No panel bed file provided, so the gCNV excluded regions is annotated."
+        # -wao will keep regions that do and don't intersect
         bedtools intersect -b $cds_hgnc_path -a $excluded_regions_path -wao > excluded_genes.bed
         head excluded_genes.bed
         python3 annotate_excluded_panel.py -e excluded_genes.bed -r $excluded_regions_path -c $cds_gene_path
 
     else
         echo "Panel bed file is provided, so the gCNV excluded regions will be interested with panel bed file."
-        bedtools intersect -a $excluded_regions_path -b $panel_bed_path | sort | uniq > panel_excluded.bed
+        # -wa will keep the a (excluded file) start and end rather than the start and end of both files
+        bedtools intersect -a $excluded_regions_path -b $panel_bed_path -wa | sort | uniq > panel_excluded.bed
         head panel_excluded.bed
         # some panels may not be excluded so the panel_excluded.bed so have
         # an empty file outputted here.
