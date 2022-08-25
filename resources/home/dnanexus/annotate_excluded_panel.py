@@ -101,7 +101,7 @@ def read_data(args):
         panel.columns = panel_col_names
         # remove versioning in transcript and add it to new column named
     # transcript_stripped
-        panel['transcript_stripped'] = panel['transcript_stripped'].str.replace(r'\..*', '')
+        panel['transcript_stripped'] = panel['transcript'].str.replace(r'\..*', '')
 
 
     return exc_panel, panel, cds_gene
