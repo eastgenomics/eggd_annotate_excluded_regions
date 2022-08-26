@@ -49,6 +49,16 @@
         "*.tsv"
       ],
       "help": "This is file contains all CDS regions using GENE SYMBOLS from NCBI GFF cache is tsv format."
+    },
+    {
+      "name": "additional_regions",
+      "label": "File containing chrom, start, end, *, gene/panel name.",
+      "class": "file",
+      "optional": false,
+      "patterns": [
+        "*.bed", "*.tsv"
+      ],
+      "help": "Primarily used for generating panels for CNV annotation where additional regions are required."
     }
   ],
   "outputSpec": [
