@@ -11,11 +11,17 @@ main() {
 	pip3 install /pytz-*.whl /numpy-*.whl /pandas-*.whl
 
     echo "--------------Filtering and annotating excluded files -----------------"
+    # The cds exons file does not contain the extra regions, such as upstream
+    # of exons and we need to annotate those if they are missing.
+    # so we will have to concatonate the exons and additional regions files.
+    awk -F "\t" '{print $1"\t"$2"\t"$3"\t"$5"\t"$4"\t""."}' $additional_regions_path > additional_regions_2.bed
+    sed 1d additional_regions_2.bed | cat $cds_hgnc_path - > cds_exons_w_additional_regions.tsv
+
     # sometimes a panel bed file is not provided
     if [ -z "$panel_bed" ]; then
         echo "No panel bed file provided, so the gCNV excluded regions is annotated."
         # -wao will keep regions that do and don't intersect
-        bedtools intersect -b $cds_hgnc_path -a $excluded_regions_path -wao > excluded_genes.bed
+        bedtools intersect -b cds_exons_w_additional_regions.tsv -a $excluded_regions_path -wao > excluded_genes.bed
         head excluded_genes.bed
         python3 annotate_excluded_panel.py -e excluded_genes.bed -r $excluded_regions_path -c $cds_gene_path
 
@@ -28,7 +34,7 @@ main() {
         # an empty file outputted here.
         if [ -s panel_excluded.bed ]; then
             echo "Some panel regions over lap with the gCNV excluded regions, these will be annotated."
-            bedtools intersect -b $cds_hgnc_path -a panel_excluded.bed -wao > panel_excluded_genes.bed
+            bedtools intersect -b cds_exons_w_additional_regions.tsv -a panel_excluded.bed -wao > panel_excluded_genes.bed
             head panel_excluded_genes.bed
             python3 annotate_excluded_panel.py -e panel_excluded_genes.bed -p $panel_bed_path -r $excluded_regions_path -c $cds_gene_path
         else
