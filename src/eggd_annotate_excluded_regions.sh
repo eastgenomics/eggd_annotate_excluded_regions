@@ -15,11 +15,8 @@ main() {
     # of exons and we need to annotate those if they are missing.
     # so we will have to concatonate the exons and additional regions files.
 
-    # reorder the file to have the same order as cds exons file. As there is no
-    # exons, the column will just be a dot.
-    awk -F "\t" '{print $1"\t"$2"\t"$3"\t"$5"\t"$4"\t""."}' $additional_regions_path > additional_regions_2.bed
     # skip first row as its header than cat it to the end of the cds file
-    sed 1d additional_regions_2.bed | cat $cds_hgnc_path - > cds_exons_w_additional_regions.tsv
+    sed 1d $additional_regions_path | cat $cds_hgnc_path - > cds_exons_w_additional_regions.tsv
 
     # sometimes a panel bed file is not provided
     if [ -z "$panel_bed" ]; then
