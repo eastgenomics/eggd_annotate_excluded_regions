@@ -52,9 +52,9 @@
     },
     {
       "name": "additional_regions",
-      "label": "File containing chrom, start, end, *, gene/panel name.",
+      "label": "File containing chrom, start, end, HGNC ID, transcript, exon.",
       "class": "file",
-      "optional": false,
+      "optional": true,
       "patterns": [
         "*.bed", "*.tsv"
       ],
