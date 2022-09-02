@@ -151,9 +151,9 @@ def main():
     if args.panel is not None:
         panel_name = args.panel
         panel_name = panel_name.split("/")[-1].rstrip(".bed")
-        output_filename = excluded_name + "_" + panel_name + ".bed"
+        output_filename = "annotated_" + excluded_name + "_" + panel_name + ".bed"
     else:
-        output_filename = excluded_name + "_" + "annotated" + ".bed"
+        output_filename = "annotated_" + excluded_name  + ".bed"
 
     df2.to_csv(
             output_filename,

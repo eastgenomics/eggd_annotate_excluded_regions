@@ -17,7 +17,7 @@
     {
       "name": "excluded_regions",
       "class": "file",
-      "optional": false,
+      "optional": true,
       "patterns": [
         "*excluded_intervals.bed"
       ],
