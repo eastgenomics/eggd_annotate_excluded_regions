@@ -72,12 +72,6 @@ def read_data(args):
                             args.excluded_panel
                             ))
     exc_panel.columns = exc_panel_col_names
-    # remove versioning in transcript and add it to new column named
-    # transcript_stripped
-    exc_panel['transcript_stripped'] = exc_panel['transcript'].str.replace(r'\..*', '')
-    # some excluded regions are intron so its just a dot and removing this
-    # can cause matching issues
-    exc_panel.loc[exc_panel['transcript_stripped'].fillna('').eq(''), 'transcript_stripped'] = '.'
 
     cds_gene_col_names = ["Chr", "Start",
                         "End", "Gene_Symbol", "Transcript",
@@ -99,9 +93,6 @@ def read_data(args):
                 "Panel file '{}' does not contain "
                 "expected columns".format(args.panel))
         panel.columns = panel_col_names
-        # remove versioning in transcript and add it to new column named
-    # transcript_stripped
-        panel['transcript_stripped'] = panel['transcript'].str.replace(r'\..*', '')
 
 
     return exc_panel, panel, cds_gene
@@ -115,7 +106,7 @@ def main():
 
     if args.panel is not None:
         # get the transcripts in panel
-        panel_transcripts = list(panel['transcript_stripped'].unique())
+        panel_transcripts = list(panel['transcript'].unique())
         # Add the dot for cases where its not exonic so they have a
         # dot instead of a transcript.
         panel_transcripts.append(".")
@@ -123,9 +114,8 @@ def main():
         # keep rows that have panel transcript in the exc_panel as exc_panel
         # has many transcript to gene
         exc_panel_transcript = exc_panel.loc[
-                            exc_panel["transcript_stripped"].isin(panel_transcripts)
+                            exc_panel["transcript"].isin(panel_transcripts)
                             ]
-        exc_panel_transcript = exc_panel_transcript.drop(['transcript_stripped'], axis=1)
     else:
         exc_panel_transcript = exc_panel
 
@@ -161,9 +151,9 @@ def main():
     if args.panel is not None:
         panel_name = args.panel
         panel_name = panel_name.split("/")[-1].rstrip(".bed")
-        output_filename = excluded_name + "_" + panel_name + ".bed"
+        output_filename = "annotated_" + excluded_name + "_" + panel_name + ".bed"
     else:
-        output_filename = excluded_name + "_" + "annotated" + ".bed"
+        output_filename = "annotated_" + excluded_name  + ".bed"
 
     df2.to_csv(
             output_filename,
