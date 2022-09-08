@@ -31,20 +31,17 @@ main() {
             echo "No panel bed file provided, so the gCNV excluded regions is annotated."
             # -wao will keep regions that do and don't intersect
             bedtools intersect -b cds_exons.tsv -a $excluded_regions_path -wao > excluded_genes.bed
-            head excluded_genes.bed
             python3 annotate_excluded_panel.py -e excluded_genes.bed -r $excluded_regions_path -c $cds_gene_path
 
         else
             echo "Panel bed file is provided, so the gCNV excluded regions will be intersected with panel bed file."
             # -wa will keep the a (excluded file) start and end rather than the start and end of both files
             bedtools intersect -a $excluded_regions_path -b $panel_bed_path -wa | sort | uniq > panel_excluded.bed
-            head panel_excluded.bed
             # some panels may not be excluded so the panel_excluded.bed so have
             # an empty file outputted here.
             if [ -s panel_excluded.bed ]; then
                 echo "Some panel regions over lap with the gCNV excluded regions, these will be annotated."
                 bedtools intersect -b cds_exons.tsv -a panel_excluded.bed -wao > panel_excluded_genes.bed
-                head panel_excluded_genes.bed
                 python3 annotate_excluded_panel.py -e panel_excluded_genes.bed -p $panel_bed_path -r $excluded_regions_path -c $cds_gene_path
             else
                 echo "Panel regions do not overlap with cnv calling excluded regions."
