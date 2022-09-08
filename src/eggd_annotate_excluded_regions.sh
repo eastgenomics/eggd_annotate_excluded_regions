@@ -20,7 +20,7 @@ main() {
         # sometimes the additional file is not provided
         if [ "$additional_regions" ]; then
             # skip first row as its header than cat it to the end of the cds file
-            sed 1d $additional_regions_path | cat $cds_hgnc_path - > cds_exons.tsv
+            sed 1d $additional_regions_path | cat $cds_hgnc_path - | sort -k1,1 -k2,2n > cds_exons.tsv
         else
             echo "No additional regions file is provided"
             mv $cds_hgnc_path cds_exons.tsv
