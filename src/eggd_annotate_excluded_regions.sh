@@ -35,7 +35,7 @@ main() {
             python3 annotate_excluded_panel.py -e excluded_genes.bed -r $excluded_regions_path -c $cds_gene_path
 
         else
-            echo "Panel bed file is provided, so the gCNV excluded regions will be interested with panel bed file."
+            echo "Panel bed file is provided, so the gCNV excluded regions will be intersected with panel bed file."
             # -wa will keep the a (excluded file) start and end rather than the start and end of both files
             bedtools intersect -a $excluded_regions_path -b $panel_bed_path -wa | sort | uniq > panel_excluded.bed
             head panel_excluded.bed
