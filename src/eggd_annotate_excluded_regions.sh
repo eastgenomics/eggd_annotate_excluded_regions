@@ -37,8 +37,9 @@ main() {
             echo "Panel bed file is provided, so the gCNV excluded regions will be intersected with panel bed file."
             # -wa will keep the a (excluded file) start and end rather than the start and end of both files
             bedtools intersect -a $excluded_regions_path -b $panel_bed_path -wa | sort | uniq > panel_excluded.bed
-            # some panels may not be excluded so the panel_excluded.bed so have
-            # an empty file outputted here.
+            # some panels may not be in the excluded file, so the panel_excluded.bed may be
+            # empty. If its empty, the python script will error out. Therefore,
+            # its easier to make an empty file with headers in the else statement. 
             if [ -s panel_excluded.bed ]; then
                 echo "Some panel regions over lap with the gCNV excluded regions, these will be annotated."
                 bedtools intersect -b cds_exons.tsv -a panel_excluded.bed -wao > panel_excluded_genes.bed
