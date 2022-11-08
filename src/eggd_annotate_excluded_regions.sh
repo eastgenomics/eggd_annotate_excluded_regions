@@ -63,6 +63,7 @@ main() {
 
     echo "--------------Converting bed to tsv -----------------"
     cd /home/dnanexus/out/annotated_excluded_file/
+    linecount=$(wc -l $out_file  | cut -d " " -f 1)
     if [ "$linecount" -gt 1 ]; then
         echo "Adding 1bp";
         awk 'BEGIN {OFS="\t"}; {print $1,$2+1,$3}' $out_file > ${out_file%%.*}.tsv;
