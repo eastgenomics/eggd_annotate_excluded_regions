@@ -63,7 +63,7 @@ def read_data(args):
 
     # Check input files have expected columns and read in data
     exc_panel_col_names = ["chr_exluded", "pos_start_excluded",
-                            "pos_end_excluded", "strand", "dot",
+                            "pos_end_excluded", "dot", "score", "strand",
                             "chr_GCF", "pos_start_GCF", "pos_end_GCF",
                             "HGNC_ID", "transcript", "exon", "num"]
     if len(exc_panel.columns) != len(exc_panel_col_names):
