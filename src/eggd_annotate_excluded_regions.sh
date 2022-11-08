@@ -61,5 +61,17 @@ main() {
     echo $out_file
     mv $out_file /home/dnanexus/out/annotated_excluded_file/
 
+    echo "--------------Converting bed to tsv -----------------"
+    cd /home/dnanexus/out/annotated_excluded_file/
+    if [ "$linecount" -gt 1 ]; then
+        echo "Adding 1bp";
+        awk 'BEGIN {OFS="\t"}; {print $1,$2+1,$3}' $out_file > ${out_file%%.*}.tsv;
+        rm $out_file;
+    else
+        echo "Empty file"
+        mv $out_file > ${out_file%%.*}.tsv;
+        rm $out_file;
+    fi
+
     dx-upload-all-outputs
 }
