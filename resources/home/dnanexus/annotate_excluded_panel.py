@@ -59,7 +59,8 @@ def read_data(args):
 
     # read data in
     exc_panel = pd.read_csv(args.excluded_panel, sep="\t", header=None)
-    cds_gene = pd.read_csv(args.cds, sep="\t", header=None)
+    cds_gene = pd.read_csv(args.cds, sep="\t",
+                            header=None, dtype='unicode')
 
     # Check input files have expected columns and read in data
     exc_panel_col_names = ["chr_exluded", "pos_start_excluded",
