@@ -76,9 +76,10 @@ main() {
             # get everything from the second line onwards as the first
             # line is the column names. Then add 1bp to start position. Then
             # join the first header to this file.
-            tail -n +2 $out_file | awk 'BEGIN {OFS="\t"}; {print $1,$2+1,$3,$4,$5,$6,$7,$8}' | cat <(head -n 1 $out_file ) - > ${out_file%.*}.tsv;
+            tail -n +2 $out_file | sort -k1,1V -k2,2n | awk 'BEGIN {OFS="\t"}; {print $1,$2+1,$3,$4,$5,$6,$7,$8}' | cat <(head -n 1 $out_file ) - > ${out_file%.*}.tsv;
             # delete original annotated bed file
             rm $out_file;
+
         else
             echo "Incorrect output header"
         fi
