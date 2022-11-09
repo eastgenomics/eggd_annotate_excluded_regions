@@ -69,8 +69,8 @@ main() {
         # check first row is header that starts with Chrom
         header=$(grep ^"Chrom" $out_file)
         if [ "$header" ]; then
-            # get everything from the second header as the first header is
-            # the column names. Then add 1bp to start position. Then
+            # get everything from the second line onwards as the first
+            # line is the column names. Then add 1bp to start position. Then
             # join the first header to this file.
             tail -n +2 $out_file | awk 'BEGIN {OFS="\t"}; {print $1,$2+1,$3,$4,$5,$6,$7,$8}' | cat <(head -n 1 $out_file ) - > ${out_file%%.*}.tsv;
             # delete original annotated bed file
@@ -79,7 +79,7 @@ main() {
             echo "Incorrect output header"
         fi
     else
-        echo "Empty file"
+        echo "Empty file with headers only"
         mv $out_file > ${out_file%%.*}.tsv;
         rm $out_file;
     fi
