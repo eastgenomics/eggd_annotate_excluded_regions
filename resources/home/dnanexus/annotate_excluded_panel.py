@@ -129,8 +129,8 @@ def main():
     exc_panel_transcript_subset.columns = ["Chrom", "Start", "End",
                                         "HGNC_ID", "Transcript", "Exon"]
     # Calculate length of annotated excluded region
-    Length = exc_panel_transcript_subset.loc[:, 'End'] - exc_panel_transcript_subset.loc[:, 'Start']
-    exc_panel_transcript_subset.insert(6, "Length", Length, True)
+    length = exc_panel_transcript_subset.loc[:, 'End'] - exc_panel_transcript_subset.loc[:, 'Start']
+    exc_panel_transcript_subset.insert(6, "Length", length, True)
 
     # lets add the gene symbol now
     # take the gene & transcript info
