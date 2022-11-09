@@ -82,7 +82,7 @@ main() {
         fi
     else
         echo "Empty file with headers only"
-        mv $out_file > ${out_file%%.*}.tsv;
+        mv $out_file ${out_file%%.*}.tsv;
         rm $out_file;
     fi
 
