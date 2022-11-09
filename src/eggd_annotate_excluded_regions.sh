@@ -78,7 +78,6 @@ main() {
         else
             echo "Incorrect output header"
         fi
-        rm $out_file;
     else
         echo "Empty file"
         mv $out_file > ${out_file%%.*}.tsv;
