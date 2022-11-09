@@ -13,7 +13,9 @@ main() {
     # If no excluded regions were provided we can just create an empty annotate_regions file
     if [ "$excluded_regions" ] ; then
         echo "--------------Select first three columns of excluded files -----------------"
-        cut -f 1,2,3 $excluded_regions_path > $excluded_regions_path
+        cut -f 1,2,3 $excluded_regions_path >  "$(basename $excluded_regions_path)"
+        rm $excluded_regions_path
+        mv $(basename $excluded_regions_path) in/excluded_regions/
         echo "--------------Filtering and annotating excluded files -----------------"
         # The cds exons file does not contain the extra regions, such as upstream
         # of exons and we need to annotate those if they are missing.
