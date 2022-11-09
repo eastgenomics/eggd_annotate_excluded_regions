@@ -66,7 +66,18 @@ main() {
     linecount=$(wc -l $out_file  | cut -d " " -f 1)
     if [ "$linecount" -gt 1 ]; then
         echo "Adding 1bp";
-        awk 'BEGIN {OFS="\t"}; {print $1,$2+1,$3}' $out_file > ${out_file%%.*}.tsv;
+        # check first row is header that starts with Chrom
+        header=$(grep ^"Chrom" $out_file)
+        if [ "$header" ]; then
+            # get everything from the second header as the first header is
+            # the column names. Then add 1bp to start position. Then
+            # join the first header to this file.
+            tail -n +2 $out_file | awk 'BEGIN {OFS="\t"}; {print $1,$2+1,$3,$4,$5,$6,$7,$8}' | cat <(head -n 1 $out_file ) - > ${out_file%%.*}.tsv;
+            # delete original annotated bed file
+            rm $out_file;
+        else
+            echo "Incorrect output header"
+        fi
         rm $out_file;
     else
         echo "Empty file"
