@@ -3,7 +3,7 @@
   "title": "eggd_annotate_excluded_regions",
   "summary": "Annotates and filters excluded bed file for CNV reports",
   "dxapi": "1.0.0",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "authorizedUsers": [
     "org-emee_1"
   ],
@@ -11,7 +11,7 @@
     "org-emee_1"
   ],
   "properties": {
-    "githubRelease": "1.0.0"
+    "githubRelease": "1.0.1"
     },
   "inputSpec": [
     {
@@ -66,9 +66,9 @@
       "name": "annotated_excluded_file",
       "class": "file",
       "patterns": [
-        "*"
+        "*.tsv"
       ],
-      "help": "Bed file with excluded regions filtered to panels and annotated"
+      "help": "tsv file with excluded regions filtered to panels and annotated"
     }
   ],
   "runSpec": {

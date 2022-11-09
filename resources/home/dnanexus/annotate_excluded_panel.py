@@ -59,11 +59,12 @@ def read_data(args):
 
     # read data in
     exc_panel = pd.read_csv(args.excluded_panel, sep="\t", header=None)
-    cds_gene = pd.read_csv(args.cds, sep="\t", header=None)
+    cds_gene = pd.read_csv(args.cds, sep="\t",
+                            header=None, dtype='unicode')
 
     # Check input files have expected columns and read in data
     exc_panel_col_names = ["chr_exluded", "pos_start_excluded",
-                            "pos_end_excluded", "strand", "dot",
+                            "pos_end_excluded", "dot", "score", "strand",
                             "chr_GCF", "pos_start_GCF", "pos_end_GCF",
                             "HGNC_ID", "transcript", "exon", "num"]
     if len(exc_panel.columns) != len(exc_panel_col_names):
@@ -128,7 +129,8 @@ def main():
     exc_panel_transcript_subset.columns = ["Chrom", "Start", "End",
                                         "HGNC_ID", "Transcript", "Exon"]
     # Calculate length of annotated excluded region
-    exc_panel_transcript_subset['Length'] = exc_panel_transcript_subset['End'] - exc_panel_transcript_subset['Start']
+    length = exc_panel_transcript_subset.loc[:, 'End'] - exc_panel_transcript_subset.loc[:, 'Start']
+    exc_panel_transcript_subset.insert(6, "Length", length, True)
 
     # lets add the gene symbol now
     # take the gene & transcript info

@@ -61,5 +61,28 @@ main() {
     echo $out_file
     mv $out_file /home/dnanexus/out/annotated_excluded_file/
 
+    echo "--------------Converting bed to tsv -----------------"
+    cd /home/dnanexus/out/annotated_excluded_file/
+    linecount=$(wc -l $out_file  | cut -d " " -f 1)
+    if [ "$linecount" -gt 1 ]; then
+        echo "Adding 1bp";
+        # check first row is header that starts with Chrom
+        header=$(grep ^"Chrom" $out_file)
+        if [ "$header" ]; then
+            # get everything from the second line onwards as the first
+            # line is the column names. Then add 1bp to start position. Then
+            # join the first header to this file.
+            tail -n +2 $out_file | awk 'BEGIN {OFS="\t"}; {print $1,$2+1,$3,$4,$5,$6,$7,$8}' | cat <(head -n 1 $out_file ) - > ${out_file%%.*}.tsv;
+            # delete original annotated bed file
+            rm $out_file;
+        else
+            echo "Incorrect output header"
+        fi
+    else
+        echo "Empty file with headers only"
+        mv $out_file > ${out_file%%.*}.tsv;
+        rm $out_file;
+    fi
+
     dx-upload-all-outputs
 }
