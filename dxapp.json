@@ -68,7 +68,7 @@
       "patterns": [
         "*.tsv"
       ],
-      "help": "Bed file with excluded regions filtered to panels and annotated"
+      "help": "tsv file with excluded regions filtered to panels and annotated"
     }
   ],
   "runSpec": {
