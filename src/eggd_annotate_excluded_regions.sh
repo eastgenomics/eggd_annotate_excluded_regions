@@ -43,7 +43,7 @@ main() {
             bedtools intersect -a $excluded_regions_path -b $panel_bed_path -wa | sort | uniq > panel_excluded.bed
             # some panels may not be in the excluded file, so the panel_excluded.bed may be
             # empty. If its empty, the python script will error out. Therefore,
-            # its easier to make an empty file with headers in the else statement. 
+            # its easier to make an empty file with headers in the else statement.
             if [ -s panel_excluded.bed ]; then
                 echo "Some panel regions over lap with the gCNV excluded regions, these will be annotated."
                 bedtools intersect -b cds_exons.tsv -a panel_excluded.bed -wao > panel_excluded_genes.bed
@@ -86,7 +86,6 @@ main() {
     else
         echo "Empty file with headers only"
         mv $out_file ${out_file%.*}.tsv;
-        rm $out_file;
     fi
 
     dx-upload-all-outputs
